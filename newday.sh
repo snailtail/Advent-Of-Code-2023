@@ -10,17 +10,19 @@ touch ./data/$1test.dat
 
 # Create the project and a unit test
 dotnet new console -o $1
+cd tests
 dotnet new xunit -o $1-test
-
+cd ..
 # Add to the solution
 dotnet sln add $1/$1.csproj
-dotnet sln add $1-test/$1-test.csproj
+dotnet sln add tests/$1-test/$1-test.csproj
 
 # Go down into the test project and add shouldly and a reference to the days project
-cd $1-test
+cd tests/$1-test
 dotnet add package shouldly
-dotnet add reference ../$1/$1.csproj
-dotnet add reference ../common/common.csproj
+dotnet add reference ../../$1/$1.csproj
+dotnet add reference ../../common/common.csproj
+cd ..
 cd ..
 
 # Go down into the days project and add reference to the common classlib
