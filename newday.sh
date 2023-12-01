@@ -31,7 +31,7 @@ dotnet add reference ../common/common.csproj
 cd ..
 
 
-echo "# :christmas_tree: Advent of Code 2023 Day$1 :christmas_tree:" > $1.md
+echo "# :christmas_tree: Advent of Code 2023 Day$1 :christmas_tree:" > $1/README.md
 git add .
 git commit -m "Add new day $1"
 git push --set-upstream origin day$1
