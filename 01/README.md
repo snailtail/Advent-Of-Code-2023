@@ -1,4 +1,4 @@
-# :christmas_tree: Advent of Code 2023 Day01 :christmas_tree:
+# Advent of Code 2023 Day01  
 
 ## Step 1  
 Started with using LINQ for extracting only the digits into an array, and choosing the first and last elements. Quick and dirty, and it worked fine for step 1. But as per usual...  
