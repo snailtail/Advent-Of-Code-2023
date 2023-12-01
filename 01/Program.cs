@@ -1,8 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-var lines = File.ReadAllLines(@"../data/01.dat").Where(l=> !string.IsNullOrEmpty(l)).Select(l=> l.Trim()).ToArray();
-
-int process(bool stepTwo = false)
+int process(string[] lines, bool stepTwo = false)
 {
     int sum = 0;
     string pattern = stepTwo ? "[1-9]|one|two|three|four|five|six|seven|eight|nine" : "[1-9]";
@@ -38,5 +36,6 @@ string parse(string input)
     return input;
 }
 
-Console.WriteLine($"Step 1: {process(false)}");
-Console.WriteLine($"Step 2: {process(true)}");
+var inputLines = File.ReadAllLines(@"../data/01.dat").Where(l=> !string.IsNullOrEmpty(l)).Select(l=> l.Trim()).ToArray();
+Console.WriteLine($"Step 1: {process(inputLines,false)}");
+Console.WriteLine($"Step 2: {process(inputLines,true)}");
