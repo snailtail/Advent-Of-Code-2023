@@ -8,4 +8,8 @@ I also have some shellscripts and python scripts for "housekeeping" (managing do
 - The inputs for each day are stored under the [/data](/data) folder, and when possible/feasible I store a file with the days testinputs as well.  
 - Unit tests - if and when I'm a good boy - are stored under the [/tests](/tests) folder.  
 - The [/common](/common) project is where I'll store things which might span several days/puzzles - as we have seen a few times, for example the INTCODE stuff from 2019.  
-Or if I come up with some fantastic tool myself, for parsing or reinventing some other type of wheel.
+Or if I come up with some fantastic tool myself, for parsing or reinventing some other type of wheel.  
+
+
+
+[![Advent Of Tests](https://github.com/snailtail/Advent-Of-Code-2023/actions/workflows/main.yml/badge.svg)](https://github.com/snailtail/Advent-Of-Code-2023/actions/workflows/main.yml)

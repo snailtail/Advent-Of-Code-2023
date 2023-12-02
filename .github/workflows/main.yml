@@ -1,4 +1,4 @@
-name: .NET Core
+name: Advent Of Tests
 
 on:
   push:
