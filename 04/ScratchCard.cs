@@ -2,10 +2,12 @@ using System.Text.RegularExpressions;
 
 public class ScratchCard
 {
-    
+    public string cardData;
     public int CardNumber;
     public int[] WinningNumbers;
     public int[] LuckyNumbers;
+    public int Copies;
+    public bool Done = false;
     public int[] ElfsWinningNumbers 
     {
         get{
@@ -25,9 +27,11 @@ public class ScratchCard
         }
     }
 
-    public ScratchCard(string cardData)
+    public ScratchCard(string CardData)
     {
-        var chunks = cardData.Split(" | ");
+        Copies=1;
+        cardData=CardData;
+        var chunks = CardData.Split(" | ");
         //0 = Card/ticket number and winning numbers - Split that on ": "
         //1 = Luckynumbers
         var cardInfo = chunks[0].Split(": ");
