@@ -24,8 +24,6 @@ long lowestLocation=0;
 while(!step2Solved)
 {
     var testseed = stlm.MapLocationToSeed(lowestLocation);
-    if(lowestLocation % 1000000 == 0)
-        Console.WriteLine($"At lowestLocation {lowestLocation} - testseed: {testseed}");
     if(Step2Ranges.Any(sr=> sr.IsWithinDefinedDestinationRange(testseed)))
     {
         step2Solved=true;
@@ -37,14 +35,5 @@ while(!step2Solved)
 
 
 
-IEnumerable<long> CreateRange(long start, long count)
-{
-    var limit = start + count;
 
-    while (start < limit)
-    {
-        yield return start;
-        start++;
-    }
-}
 record Step2Range(long Start, long Count);
