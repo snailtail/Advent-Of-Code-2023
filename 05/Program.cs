@@ -9,10 +9,13 @@ Console.WriteLine($"Step 1: {step1}");
 
 
 //step 2
-List<IEnumerable<long>> Step2Ranges = new();
+List<MapperRange> Step2Ranges = new();
 for(int i = 0; i < stlm.Seeds.Length; i+=2)
 {
-    Step2Ranges.Add(CreateRange(stlm.Seeds[i],stlm.Seeds[i+1]));
+    var newRange = new MapperRange();
+    newRange.DestinationStart=stlm.Seeds[i];
+    newRange.RangeLength = stlm.Seeds[i+1];
+    Step2Ranges.Add(newRange);
 }
 
 
@@ -21,8 +24,9 @@ long lowestLocation=0;
 while(!step2Solved)
 {
     var testseed = stlm.MapLocationToSeed(lowestLocation);
-    System.Console.WriteLine($"At lowestLocation {lowestLocation}");
-    if(Step2Ranges.Any(sr=> sr.Contains(testseed)))
+    if(lowestLocation % 1000000 == 0)
+        Console.WriteLine($"At lowestLocation {lowestLocation} - testseed: {testseed}");
+    if(Step2Ranges.Any(sr=> sr.IsWithinDefinedDestinationRange(testseed)))
     {
         step2Solved=true;
         Console.WriteLine($"Step 2: {lowestLocation}");
