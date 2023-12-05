@@ -1,4 +1,4 @@
-﻿var rawinput = File.ReadAllText("../../../../data/05.dat");
+﻿var rawinput = File.ReadAllText("../data/05.dat");
 SeedToLocationMapper stlm = new(rawinput);
 long step1 = long.MaxValue;
 foreach (var s in stlm.Seeds)
