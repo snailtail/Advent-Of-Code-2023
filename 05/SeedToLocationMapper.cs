@@ -49,7 +49,7 @@ public class SeedToLocationMapper
     }
     public SeedToLocationMapper(string rawinput)
     {
-        string[] inputData = rawinput.Split("\r\n\r\n");
+        string[] inputData = rawinput.Split("\n\n");
         ParseInput(inputData);
     }
     private void ParseInput(string[] input)
@@ -71,31 +71,31 @@ public class SeedToLocationMapper
                     Seeds = seeds.Select(s=> long.Parse(s)).ToArray();
                     break;
                 case "seed-t":
-                    mapperinput = s.Replace("seed-to-soil map:\r\n","").Split("\r\n");
+                    mapperinput = s.Replace("seed-to-soil map:\n","").Split("\n");
                     SeedToSoilMap = new ElfMapper(mapperinput);
                     break;
                 case "soil-t":
-                    mapperinput = s.Replace("soil-to-fertilizer map:\r\n","").Split("\r\n");
+                    mapperinput = s.Replace("soil-to-fertilizer map:\n","").Split("\n");
                     SoilToFertilizerMap = new ElfMapper(mapperinput);
                     break;
                 case "fertil":
-                    mapperinput = s.Replace("fertilizer-to-water map:\r\n","").Split("\r\n");
+                    mapperinput = s.Replace("fertilizer-to-water map:\n","").Split("\n");
                     FertilizerToWaterMap = new ElfMapper(mapperinput);
                     break;
                 case "water-":
-                    mapperinput = s.Replace("water-to-light map:\r\n","").Split("\r\n");
+                    mapperinput = s.Replace("water-to-light map:\n","").Split("\n");
                     WaterToLightMap = new ElfMapper(mapperinput);
                     break;
                 case "light-":
-                    mapperinput = s.Replace("light-to-temperature map:\r\n","").Split("\r\n");
+                    mapperinput = s.Replace("light-to-temperature map:\n","").Split("\n");
                     LightToTemperatureMap = new ElfMapper(mapperinput);
                     break;
                 case "temper":
-                    mapperinput = s.Replace("temperature-to-humidity map:\r\n","").Split("\r\n");
+                    mapperinput = s.Replace("temperature-to-humidity map:\n","").Split("\n");
                     TemperatureToHumidityMap = new ElfMapper(mapperinput);
                     break;
                 case "humidi":
-                    mapperinput = s.Replace("humidity-to-location map:\r\n","").Split("\r\n");
+                    mapperinput = s.Replace("humidity-to-location map:\n","").Split("\n");
                     HumidityToLocationMap = new ElfMapper(mapperinput);
                     break;
                 default:
