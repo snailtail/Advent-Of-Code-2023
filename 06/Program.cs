@@ -4,7 +4,6 @@ BoatRaceHandler brh = new(input);
 int step1Wins = 1;
 foreach(var r in brh.Races)
 {
-    Console.WriteLine(brh.WaysToWinRace(r));
     step1Wins *= brh.WaysToWinRace(r);
 }
 int step2Wins = brh.WaysToWinRace(brh.Step2Race);
