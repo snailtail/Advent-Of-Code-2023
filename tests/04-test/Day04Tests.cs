@@ -38,7 +38,6 @@ public class Day04Tests
         for (int i = 0; i < result.Length; i++)
         {
             result[i].ShouldBe(expectedLuckyNumbers[i]);
-            Console.WriteLine(result[i]);
         }
     }
 
@@ -54,7 +53,6 @@ public class Day04Tests
         for (int i = 0; i < result.Length; i++)
         {
             result[i].ShouldBe(expectedElfsWinningNumbers[i]);
-            Console.WriteLine(result[i]);
         }
     }
 
