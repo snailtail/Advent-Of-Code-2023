@@ -1,2 +1,12 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿
+var input = File.ReadAllLines("../data/06.dat");
+BoatRaceHandler brh = new(input);
+int step1Wins = 1;
+foreach(var r in brh.Races)
+{
+    Console.WriteLine(brh.WaysToWinRace(r));
+    step1Wins *= brh.WaysToWinRace(r);
+}
+int step2Wins = brh.WaysToWinRace(brh.Step2Race);
+Console.WriteLine($"Step 1: {step1Wins}");
+Console.WriteLine($"Step 1: {step2Wins}");
