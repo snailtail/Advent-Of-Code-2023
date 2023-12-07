@@ -1,8 +1,7 @@
 public static class CamelCards
 {
-
-//210 är maxvärdet för korten i sig. (5 st A)
-    public static Dictionary<char,int> CardValues = new(){
+    public static Dictionary<char, int> CardValues = new(){
+        {'1',1},
         {'2',2},
         {'3',3},
         {'4',4},
@@ -17,11 +16,13 @@ public static class CamelCards
         {'K',13},
         {'A',14},
         };
-    
-    public static int GetCardStackTotalWinnings(string inputFilePath)
+
+
+    public static int GetCardStackTotalWinnings(string inputFilePath, bool UseJokerCard = false)
     {
-        int expectedWinnings = 6440;
+        int totalWinnings = 0;
         var fileData = File.ReadAllLines(inputFilePath);
+
         List<CamelCardHand> handsList = new();
         foreach (string line in fileData)
         {
@@ -29,14 +30,32 @@ public static class CamelCards
             CamelCardHand cch = new(parts[0], int.Parse(parts[1]));
             handsList.Add(cch);
         }
-        CamelCardHand[] SortedHands = handsList.OrderBy(h => h.Weight).ToArray();
-        int totalWinnings = 0;
-        for(int i = 0; i < SortedHands.Length; i++)
+        if (UseJokerCard)
         {
-            int rank = i+1;
-            int bid = SortedHands[i].BidAmount;
-            totalWinnings += rank*bid;
+            foreach (CamelCardHand cch in handsList)
+            {
+                cch.ApplyJokerCard();
+            }
         }
+
+        List<CamelCardHand> theCards = new();
+        theCards = handsList.Where(h => h.handType == CamelCardHand.HandType.HighCard).OrderBy(h => h.Weight).ToList();
+        theCards.AddRange(handsList.Where(h => h.handType == CamelCardHand.HandType.OnePair).OrderBy(h => UseJokerCard ? h.WeightWithJoker : h.Weight).ToArray());
+        theCards.AddRange(handsList.Where(h => h.handType == CamelCardHand.HandType.TwoPair).OrderBy(h => UseJokerCard ? h.WeightWithJoker : h.Weight).ToArray());
+        theCards.AddRange(handsList.Where(h => h.handType == CamelCardHand.HandType.ThreeOfAKind).OrderBy(h => UseJokerCard ? h.WeightWithJoker : h.Weight).ToArray());
+        theCards.AddRange(handsList.Where(h => h.handType == CamelCardHand.HandType.FullHouse).OrderBy(h => UseJokerCard ? h.WeightWithJoker : h.Weight).ToArray());
+        theCards.AddRange(handsList.Where(h => h.handType == CamelCardHand.HandType.FourOfAKind).OrderBy(h => UseJokerCard ? h.WeightWithJoker : h.Weight).ToArray());
+        theCards.AddRange(handsList.Where(h => h.handType == CamelCardHand.HandType.FiveOfAKind).OrderBy(h => UseJokerCard ? h.WeightWithJoker : h.Weight).ToArray());
+
+
+        for (int i = 0; i < theCards.Count; i++)
+        {
+            int index = i + 1;
+            int bid = theCards[i].BidAmount;
+            int sum = index * bid;
+            totalWinnings += sum;
+        }
+
         return totalWinnings;
     }
 }

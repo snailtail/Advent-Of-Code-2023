@@ -1,6 +1,7 @@
 namespace _07_test;
 
 using System.Configuration.Assemblies;
+using System.Xml.Serialization;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Shouldly;
 public class UnitTest1
@@ -20,23 +21,23 @@ public class UnitTest1
     [InlineData('Q', 12)]
     [InlineData('K', 13)]
     [InlineData('A', 14)]
-    public void CheckCardValues(char card, int expectedvalue)
+    public void CheckCardValuesEnum(char card, int expectedvalue)
     {
         CamelCards.CardValues[card].ShouldBe(expectedvalue);
     }
 
     [Theory]
-    [InlineData("22222", new long[] { 20000, 2000, 200, 20, 2 })]
-    [InlineData("2222A", new long[] { 20000, 2000, 200, 20, 14 })]
-    [InlineData("AQ4J3", new long[] { 140000, 12000, 400, 110, 3 })]
-    [InlineData("23456", new long[] { 20000, 3000, 400, 50, 6 })]
+    [InlineData("22222", new long[] { 2, 2, 2, 2, 2 })]
+    [InlineData("2222A", new long[] { 2, 2, 2, 2, 14 })]
+    [InlineData("AQ4J3", new long[] { 14, 12, 4, 11, 3 })]
+    [InlineData("23456", new long[] { 2, 3, 4, 5, 6 })]
 
     private void CheckCardWeights(string cards, long[] expectedCardWeight)
     {
         CamelCardHand cch = new(cards);
         for (int c = 0; c < cards.Length; c++)
         {
-            cch.CardWeights[c].ShouldBe(expectedCardWeight[c]);
+            cch.CardValues[c].ShouldBe(expectedCardWeight[c]);
         }
     }
 
@@ -64,12 +65,12 @@ public class UnitTest1
     }
 
     [Theory]
-    [InlineData("23456", 234560)] //20000 + 3000 + 400 + 50 + 6
-    [InlineData("32T3K", 33043000)]  //sum of cardweight = 72
-    [InlineData("T55J5", 1056150000000)]  //112
-    [InlineData("KK677", 14367700000)]  //156
-    [InlineData("KTJJT", 14122000000)]  //170
-    [InlineData("QQQJA", 1333240000000)]  //180
+    [InlineData("23456", 144470)] //20000 + 3000 + 400 + 50 + 6
+    [InlineData("32T3K", 207421)]  //sum of cardweight = 72
+    [InlineData("T55J5", 677301)]  //112
+    [InlineData("KK677", 906871)]  //156
+    [InlineData("KTJJT", 895930)]  //170
+    [InlineData("QQQJA", 838846)]  //180
     private void TestHandWeight(string hand, long expectedHandWeight)
     {
         CamelCardHand cch = new(hand);
@@ -94,7 +95,14 @@ public class UnitTest1
             CamelCardHand cch = new(parts[0], int.Parse(parts[1]));
             handsList.Add(cch);
         }
-        CamelCardHand[] SortedHands = handsList.OrderBy(h => h.Weight).ToArray();
+        List<CamelCardHand> SortedHands = new();
+        SortedHands = handsList.Where(h => h.handType == CamelCardHand.HandType.HighCard).OrderBy(h => h.Weight).ToList();
+        SortedHands.AddRange(handsList.Where(h => h.handType == CamelCardHand.HandType.OnePair).OrderBy(h => h.Weight).ToArray());
+        SortedHands.AddRange(handsList.Where(h => h.handType == CamelCardHand.HandType.TwoPair).OrderBy(h => h.Weight).ToArray());
+        SortedHands.AddRange(handsList.Where(h => h.handType == CamelCardHand.HandType.ThreeOfAKind).OrderBy(h => h.Weight).ToArray());
+        SortedHands.AddRange(handsList.Where(h => h.handType == CamelCardHand.HandType.FullHouse).OrderBy(h => h.Weight).ToArray());
+        SortedHands.AddRange(handsList.Where(h => h.handType == CamelCardHand.HandType.FourOfAKind).OrderBy(h => h.Weight).ToArray());
+        SortedHands.AddRange(handsList.Where(h => h.handType == CamelCardHand.HandType.FiveOfAKind).OrderBy(h => h.Weight).ToArray());
         SortedHands[Index].Cards.ShouldBe(expectedHand);
     }
 
@@ -106,13 +114,38 @@ public class UnitTest1
     }
 
     [Theory]
-    [InlineData("268KQ","2349J",true)]
+    [InlineData("268KQ", "2349J", true)]
+    [InlineData("A2345", "2A345", true)]
     private void TestWeightsBetweenSimilarHands(string hand1, string hand2, bool FirstHandIsGreater)
     {
-        CamelCardHand cch1 = new(hand1,0);
-        CamelCardHand cch2 = new(hand2,0);
+        CamelCardHand cch1 = new(hand1, 0);
+        CamelCardHand cch2 = new(hand2, 0);
         bool result = cch1.Weight > cch2.Weight;
         result.ShouldBe(FirstHandIsGreater);
 
     }
+
+    [Theory]
+    [InlineData("2345J", CamelCardHand.HandType.OnePair)]
+    [InlineData("J345J", CamelCardHand.HandType.ThreeOfAKind)]
+    [InlineData("3344J", CamelCardHand.HandType.FullHouse)]
+    [InlineData("3334J", CamelCardHand.HandType.FourOfAKind)]
+    [InlineData("333JJ", CamelCardHand.HandType.FiveOfAKind)]
+    [InlineData("J3J3J", CamelCardHand.HandType.FiveOfAKind)]
+    [InlineData("JJJ3J", CamelCardHand.HandType.FiveOfAKind)]
+    [InlineData("J3333", CamelCardHand.HandType.FiveOfAKind)]
+    [InlineData("JJJJJ", CamelCardHand.HandType.FiveOfAKind)]
+    private void TestJokerReplacement(string hand, CamelCardHand.HandType expectedHandType)
+    {
+        CamelCardHand cch = new(hand);
+        cch.ApplyJokerCard();
+        cch.handType.ShouldBe(expectedHandType);
+    }
+
+    private void CheckTotalWinningsWithjoker()
+    {
+        var result = CamelCards.GetCardStackTotalWinnings(testFilePath,true);
+        result.ShouldBe(5905);
+    }
+
 }
