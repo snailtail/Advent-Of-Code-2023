@@ -1,7 +1,10 @@
-// See https://aka.ms/new-console-template for more information
 public class DesertNode
 {
-    public string ID;
-    public DesertNode Left;
-    public DesertNode Right;
+    public string ID {get;}
+    public DesertNode? Left;
+    public DesertNode? Right;
+    public DesertNode(string id)
+    {
+        ID = id;
+    }
 }
