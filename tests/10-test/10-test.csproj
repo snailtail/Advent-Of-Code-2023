@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>_08_test</RootNamespace>
+    <RootNamespace>_10_test</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\08\08.csproj" />
+    <ProjectReference Include="..\..\10\10.csproj" />
     <ProjectReference Include="..\..\common\common.csproj" />
   </ItemGroup>
 
