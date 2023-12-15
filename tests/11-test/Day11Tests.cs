@@ -10,35 +10,34 @@ public class Day11tests
     public void TestRowCount()
     {
         CosmicMap cm = new(testFilePath);
-        cm.RowCount.ShouldBe(12);
+        cm.RowCount.ShouldBe(10);
     }
 
     [Fact]
     public void TestMapWidth()
     {
         CosmicMap cm = new(testFilePath);
-        cm.MapWidth.ShouldBe(13);
-        Console.WriteLine(cm.GetPrintableMap());
+        cm.MapWidth.ShouldBe(10);
     }
 
     [Fact]
     public void TestMapOutput()
     {
-        string expectedExtendecMapData = "....#........\n.........#...\n#............\n.............\n.............\n........#....\n.#...........\n............#\n.............\n.............\n.........#...\n#....#.......\n";
+        string expectedMapData ="...#......\n.......#..\n#.........\n..........\n......#...\n.#........\n.........#\n..........\n.......#..\n#...#.....\n";
         CosmicMap cm = new(testFilePath);
-        cm.GetPrintableMap().ShouldBe(expectedExtendecMapData);
+        cm.GetPrintableMap().ShouldBe(expectedMapData);
     }
 
     [Theory]
-    [InlineData(0,0,4)]
-    [InlineData(1,1,9)]
+    [InlineData(0,0,3)]
+    [InlineData(1,1,7)]
     [InlineData(2,2,0)]
-    [InlineData(3,5,8)]
-    [InlineData(4,6,1)]
-    [InlineData(5,7,12)]
-    [InlineData(6,10,9)]
-    [InlineData(7,11,0)]
-    [InlineData(8,11,5)]
+    [InlineData(3,4,6)]
+    [InlineData(4,5,1)]
+    [InlineData(5,6,9)]
+    [InlineData(6,8,7)]
+    [InlineData(7,9,0)]
+    [InlineData(8,9,4)]
     private void CheckScannedGalaxieCoordinates(int GalaxyIndex, int Y, int X)
     {
         CosmicMap cm = new(testFilePath);
@@ -59,9 +58,18 @@ public class Day11tests
     }
 
     [Fact]
-    private void TestSumBetweenGalaxyPairs()
+    private void TestSumBetweenGalaxyPairsPart1()
     {
         CosmicMap cm = new(testFilePath);
         cm.SumOfShortestPathsBetweenPairs().ShouldBe(374);
+    }
+
+    [Theory]
+    [InlineData(10,1030)]
+    [InlineData(100,8410)]
+    private void TestSumBetweenGalaxyPairspart2(long multiplicator, long expectedResult)
+    {
+        CosmicMap cm = new(testFilePath,multiplicator);
+        cm.SumOfShortestPathsBetweenPairs().ShouldBe(expectedResult);
     }
 }
