@@ -62,7 +62,7 @@ public class DesertMapper
             }
             steps++;
             directionIndex++;
-            activeNodeID = activeNode.ID;
+            activeNodeID = activeNode == null ? "" : activeNode.ID;
         }
         return steps;
     }
