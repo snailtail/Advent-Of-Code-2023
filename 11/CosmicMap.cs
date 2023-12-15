@@ -1,7 +1,6 @@
-using System.Runtime.CompilerServices;
-
 public class CosmicMap
 {
+    private long addedMultiplicator;
     private int mapWidth;
     private string map;
     private int rowCount;
@@ -11,18 +10,19 @@ public class CosmicMap
 
     public int MapWidth => mapWidth;
     public int RowCount => rowCount;
-    private int columnsAdded;
-    private int rowsAdded;
     private Queue<int> columnsToDuplicate = new();
     private Queue<int> rowsToDuplicate = new();
+    private HashSet<int> duplicatedRows = new();
+    private HashSet<int> duplicatedCols = new();
     private HashSet<GalaxyCoordinate> UsedInpair = new();
 
-    public CosmicMap(string filePath = "../data/11test.dat")
+    public CosmicMap(string filePath = "../data/11test.dat", long AddedMultiplicator = 2)
     {
         string[] mapData = File.ReadAllText(filePath).Split(Environment.NewLine);
         mapWidth = mapData[0].Length;
         map = string.Join("", mapData);
         rowCount = map.Length / mapWidth;
+        addedMultiplicator=AddedMultiplicator-1;
         ExtendMap();
         ScanForGalaxies();
     }
@@ -31,13 +31,13 @@ public class CosmicMap
     public long SumOfShortestPathsBetweenPairs()
     {
         long sum = 0;
-        for(int x = 0; x < galaxies.Count; x++)
+        for (int x = 0; x < galaxies.Count; x++)
         {
             UsedInpair.Add(galaxies[x].Coordinate);
-            var neighborGalaxies = galaxies.Where(g=> !UsedInpair.Contains(g.Coordinate)).ToArray();
-            foreach(var g in neighborGalaxies)
+            var neighborGalaxies = galaxies.Where(g => !UsedInpair.Contains(g.Coordinate)).ToArray();
+            foreach (var g in neighborGalaxies)
             {
-                long distance = CalculateManhattanDistance(galaxies[x].Coordinate,g.Coordinate);
+                long distance = CalculateManhattanDistance(galaxies[x].Coordinate, g.Coordinate);
                 sum += distance;
             }
         }
@@ -67,6 +67,7 @@ public class CosmicMap
             if (ColumnIsEmpty(i))
             {
                 columnsToDuplicate.Enqueue(i);
+                duplicatedCols.Add(i);
             }
 
         }
@@ -75,48 +76,9 @@ public class CosmicMap
             if (RowIsEmpty(i))
             {
                 rowsToDuplicate.Enqueue(i);
+                duplicatedRows.Add(i);
             }
         }
-
-        // extend columns
-        // every time we add a new column we increase the columnsAdded counter
-        // which is used to get the correct index for the following columns after adding a new one before them
-        while (columnsToDuplicate.Count > 0)
-        {
-            int columnIndex = columnsToDuplicate.Dequeue();
-            columnIndex += columnsAdded;
-            for (int row = 0; row < rowCount; row++)
-            {
-                map = map.Insert((row * mapWidth) + columnIndex + row + 1, ".");
-            }
-
-
-            columnsAdded++;
-            mapWidth++;
-
-
-        }
-        rowCount = map.Length / mapWidth;
-
-
-        // extend rows
-        // every time we add a new row we increase the rowsAdded counter
-        // which is used to get the correct index for the following columns after adding a new one before them
-        while (rowsToDuplicate.Count > 0)
-        {
-            int rowIndex = rowsToDuplicate.Dequeue();
-            rowIndex += rowsAdded;
-            for (int col = 0; col < mapWidth; col++)
-            {
-                map = map.Insert((rowIndex * mapWidth), ".");
-            }
-
-
-            rowsAdded++;
-            rowCount = map.Length / mapWidth;
-
-        }
-
     }
 
 
@@ -138,12 +100,26 @@ public class CosmicMap
 
 
     public long CalculateManhattanDistance(GalaxyCoordinate point1, GalaxyCoordinate point2)
-{
-    long deltaY = Math.Abs(point1.Y - point2.Y);
-    long deltaX = Math.Abs(point1.X - point2.X);
+    {
+        long minX = Math.Min(point1.X, point2.X);
+        long minY = Math.Min(point1.Y, point2.Y);
 
-    return deltaY + deltaX;
-}
+        long maxX = Math.Max(point1.X, point2.X);
+        long maxY = Math.Max(point1.Y, point2.Y);
+
+        int extendedRows = duplicatedRows.Where(r=> r >=minY && r <=maxY).Count();
+        int extendedCols = duplicatedCols.Where(c=> c >=minX && c <=maxX).Count();
+
+        long addedY = addedMultiplicator * extendedRows;
+        long addedX = addedMultiplicator * extendedCols;
+
+        maxY +=addedY;
+        maxX+=addedX;
+        long deltaY = Math.Abs(maxY - minY);
+        long deltaX = Math.Abs(maxX - minX);
+
+        return deltaY + deltaX;
+    }
     bool ColumnIsEmpty(int columnIndex)
     {
         int row = 0;
