@@ -52,17 +52,17 @@ public class DesertMapper
             switch (directionData[directionIndex])
             {
                 case 'L':
-                    activeNode = activeNode.Left;
+                    activeNode = activeNode != null ? activeNode.Left : null;
                     break;
                 case 'R':
-                    activeNode = activeNode.Right;
+                    activeNode = activeNode != null ? activeNode.Right : null;
                     break;
                 default:
                     throw new System.Exception($"Directiondata \"{directionData[directionIndex]}\" not understood ");
             }
             steps++;
             directionIndex++;
-            activeNodeID = activeNode.ID;
+            activeNodeID = activeNode == null ? "" : activeNode.ID;
         }
         return steps;
     }
@@ -83,17 +83,17 @@ public class DesertMapper
             switch (directionData[directionIndex])
             {
                 case 'L':
-                    activeNode = activeNode.Left;
+                    activeNode = activeNode != null ? activeNode.Left : null;
                     break;
                 case 'R':
-                    activeNode = activeNode.Right;
+                    activeNode = activeNode != null ? activeNode.Right : null;
                     break;
                 default:
                     throw new System.Exception($"Directiondata \"{directionData[directionIndex]}\" not understood ");
             }
             steps++;
             directionIndex++;
-            activeNodeID = activeNode.ID;
+            activeNodeID = activeNode == null ? "" : activeNode.ID;
         }
         return steps;
     }
