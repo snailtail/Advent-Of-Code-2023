@@ -1,2 +1,5 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿
+var pData = File.ReadAllLines("../data/14.dat");
+Platform p = new(pData);
+int part1=p.Part1();
+Console.WriteLine($"Part 1 : {part1}");
